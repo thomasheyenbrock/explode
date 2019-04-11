@@ -2,7 +2,7 @@
 
 What comes after the reaction? The explosion!
 
-![Exploding Death Star](https://gph.is/1PjsfpF)
+![Exploding Death Star](https://media.giphy.com/media/1vRlMcPvrYMY8/giphy.gif)
 
 ## What is this?
 
