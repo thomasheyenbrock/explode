@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Explode Demo</title>
+    <style>
+      .huge {
+        font-size: 100px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app"></div>
+    <script>
+      // This is the code of the "explode" package.
+
+      function _render(element) {
+        const { type, props } = element;
+        if (typeof type === "function") {
+          const elementInstance = type(props);
+          if (
+            typeof elementInstance === "string" ||
+            typeof elementInstance === "number"
+          ) {
+            return [document.createTextNode(elementInstance)];
+          }
+          const arrayOfElementInstances = Array.isArray(elementInstance)
+            ? elementInstance
+            : [elementInstance];
+          console.log(arrayOfElementInstances);
+          return arrayOfElementInstances
+            .reduce((acc, instance) => {
+              if (typeof instance === "object" && instance && instance.type) {
+                return [...acc, ..._render(instance)];
+              }
+              return acc;
+            }, [])
+            .filter(Boolean);
+        } else if (typeof type === "string") {
+          const element = document.createElement(type);
+          const { children, ...restProps } = props;
+          if (children) {
+            children
+              .reduce((acc, child) => {
+                if (typeof child === "string" || typeof child === "number") {
+                  return [...acc, document.createTextNode(child)];
+                } else if (typeof child === "object" && child && child.type) {
+                  return [...acc, ..._render(child)];
+                }
+                return acc;
+              }, [])
+              .filter(Boolean)
+              .forEach(child => {
+                element.appendChild(child);
+              });
+          }
+          Object.entries(restProps).forEach(([attrName, attrValue]) => {
+            element.setAttribute(attrName, attrValue);
+          });
+          return [element];
+        }
+      }
+
+      function render(element, domNode) {
+        const renderedElements = _render(element);
+        console.log(renderedElements);
+        renderedElements.forEach(element => {
+          document.getElementById("app").appendChild(element);
+        });
+      }
+
+      function createElement(component, props = {}) {
+        return {
+          type: component,
+          props
+        };
+      }
+
+      const Explode = {
+        createElement,
+        render
+      };
+    </script>
+    <script>
+      // This is what a user would do:
+      // const App = () => "Hello World";
+      // const App = () => 42;
+      // const App = () => ({ type: "button", props: {} });
+      // const App = () => ({
+      //   type: "button",
+      //   props: { children: ["Hello", "World"], foo: "bar" }
+      // });
+      // const App = () => ({
+      //   type: "button",
+      //   props: {
+      //     children: [
+      //       {
+      //         type: "span",
+      //         props: { children: ["Hello World"] }
+      //       }
+      //     ],
+      //     foo: "bar"
+      //   }
+      // });
+      const Button = () =>
+        Explode.createElement("button", {
+          children: [
+            "Hello",
+            Explode.createElement("span", { children: ["World", " ", 42] })
+          ],
+          foo: "bar"
+        });
+      // const App = () => [
+      //   Explode.createElement("h1", {
+      //     children: ["Hello World"],
+      //     style: "color: red",
+      //     class: "huge"
+      //   }),
+      //   Explode.createElement(Button)
+      // ];
+      const App = () =>
+        Explode.createElement("div", {
+          children: [
+            Explode.createElement("h1", {
+              children: ["Hello World"],
+              style: "color: red",
+              class: "huge"
+            }),
+            Explode.createElement(Button)
+          ]
+        });
+      Explode.render(
+        Explode.createElement(App),
+        document.getElementById("app")
+      );
+    </script>
+  </body>
+</html>
