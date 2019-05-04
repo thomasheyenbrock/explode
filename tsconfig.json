@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "module": "esnext",
+    "strict": true,
+    "moduleResolution": "node",
+    "jsx": "preserve",
+    "lib": ["dom", "es5", "es6", "es7", "es2017", "esnext.asynciterable"],
+    "allowSyntheticDefaultImports": true,
+    "typeRoots": ["node_modules/@types"],
+    "types": ["jest"]
+  },
+  "exclude": ["build", "coverage", "node_modules", "*.test.tsx?"]
+}
