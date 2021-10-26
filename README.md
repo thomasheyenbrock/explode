@@ -75,4 +75,6 @@ We don't want to traverse the complete tree again when we update the DOM, becaus
 
 We traverse the `effect`-list and execute all queued `effect` callbacks. Those will flush our updates to the DOM.
 
-### Goal 3: Adding state
+### Goal 3: Handling DOM events
+
+### Goal 4: Adding state

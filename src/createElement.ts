@@ -70,7 +70,7 @@ export function createElement(
   type: string | FunctionComponent,
   props: JSXProps | null,
   ...children: ExplodeElement[]
-) {
+) {z
   const typeofType = typeof type;
   if (!["string", "function"].includes(typeofType)) {
     throw new Error(
